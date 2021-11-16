@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class IInventory : MonoBehaviour
 {
+    public List<ISlot> Get => slots;
     private List<ISlot> slots;
     private IInventoryUI ui;
 
@@ -13,17 +14,17 @@ public class IInventory : MonoBehaviour
         ui = FindObjectOfType<IInventoryUI>();
     }
 
-    public void Add(string name, string description, Sprite icon, int quantity, bool stackable, string meta)
+    public void Add(IItem item, int quantity)
     {
-        if (Find(name, out ISlot slot) != null && slot.stackable) slot.quantity += quantity;
-        else slots.Add(new ISlot(name, description, icon, quantity, stackable, meta));
+        if (Find(item.name, out ISlot slot) != null && slot.item.stackable) slot.quantity += quantity;
+        else slots.Add(new ISlot(item, quantity));
         ui.Synchronize();
     }
 
-    public void Add(IObject obj) => Add(obj.name, obj.description, obj.icon, obj.quantity, obj.stackable, obj.meta);
-    public void Add(ISlot slot) => Add(slot.name, slot.description, slot.icon, slot.quantity, slot.stackable, slot.meta);
-    public ISlot Find(string name, out ISlot slot) => slot = slots.Find(s => s.name == name);
-    public ISlot Find(string name, int quantity, out ISlot slot) => slot = slots.Find(s => s.name == name && s.quantity >= quantity);
+    public void Add(IObject obj) => Add(obj.item, obj.quantity);
+    public void Add(ISlot slot) => Add(slot.item, slot.quantity);
+    public ISlot Find(string name, out ISlot slot) => slot = slots.Find(s => s.item.name == name);
+    public ISlot Find(string name, int quantity, out ISlot slot) => slot = slots.Find(s => s.item.name == name && s.quantity >= quantity);
     public bool Check(string name, int quantity) => Find(name, out ISlot slot) != null && slot.quantity >= quantity;
     public bool Remove(string name, int quantity)
     {
@@ -31,7 +32,6 @@ public class IInventory : MonoBehaviour
         {
             slot.quantity -= quantity;
             if (slot.Empty) slots.Remove(slot);
-            //slots.RemoveAll(s => s.quantity <= 0);
             ui.Synchronize();
             return true;
         }
@@ -55,23 +55,14 @@ public class IInventory : MonoBehaviour
     [System.Serializable]
     public class ISlot
     {
-        public string name;
-        [TextArea(3, 5)] public string description;
-        public Sprite icon;
+        public IItem item;
         public int quantity;
-        public bool stackable;
-        public string meta;
-
         public bool Empty => quantity <= 0;
 
-        public ISlot(string name, string description, Sprite icon, int quantity, bool stackable, string meta)
+        public ISlot(IItem item, int quantity)
         {
-            this.name = name;
-            this.description = description;
-            this.icon = icon;
+            this.item = item;
             this.quantity = quantity;
-            this.stackable = stackable;
-            this.meta = meta;
         }
     }
 

@@ -1,10 +1,15 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using ISlot = IInventory.ISlot;
 
 public class IResource : MonoBehaviour
 {
     [SerializeField] private IItem resource;
     [SerializeField] private float hp;
-    public IItem Collect => resource;
+
+    public IItem Collect()
+    {
+        return resource;
+    }
 }
