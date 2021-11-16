@@ -25,7 +25,8 @@ public class IPlayer : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.E)
             && Physics.Raycast(root.position, root.forward, out RaycastHit collectHit, 3f, LayerMask.GetMask("Resources")))
         {
-
+            IObject obj = collectHit.transform.GetComponentInParent<IObject>();
+            if (obj != null) inventory.Add(obj);
         }
     }
 }

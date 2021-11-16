@@ -21,7 +21,12 @@ public class IInventory : MonoBehaviour
         ui.Synchronize();
     }
 
-    public void Add(IObject obj) => Add(obj.item, obj.quantity);
+    public void Add(IObject obj)
+    {
+        Add(obj.item, obj.quantity);
+        Destroy(obj.gameObject);
+    }
+
     public void Add(ISlot slot) => Add(slot.item, slot.quantity);
     public ISlot Find(string name, out ISlot slot) => slot = slots.Find(s => s.item.name == name);
     public ISlot Find(string name, int quantity, out ISlot slot) => slot = slots.Find(s => s.item.name == name && s.quantity >= quantity);
