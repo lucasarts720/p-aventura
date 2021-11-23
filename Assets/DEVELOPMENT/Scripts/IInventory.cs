@@ -46,13 +46,13 @@ public class IInventory : MonoBehaviour
     public void RemoveAll(params IQuerry[] querries)
     {
         foreach (IQuerry querry in querries)
-            Remove(querry.name, querry.quantity);
+            Remove(querry.item.name, querry.quantity);
     }
 
     public bool Querry(params IQuerry[] querries)
     {
         foreach (IQuerry querry in querries)
-            if (!Check(querry.name, querry.quantity))
+            if (!Check(querry.item.name, querry.quantity))
                 return false;
         return true;
     }
@@ -74,12 +74,12 @@ public class IInventory : MonoBehaviour
     [System.Serializable]
     public class IQuerry
     {
-        public string name;
+        public IItem item;
         public int quantity;
 
-        public IQuerry(string name, int quantity)
+        public IQuerry(IItem item, int quantity)
         {
-            this.name = name;
+            this.item = item;
             this.quantity = quantity;
         }
     }
